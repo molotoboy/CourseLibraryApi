@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using CourseLibrary.API.Helpers;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CourseLibrary.API.Controllers
 {
@@ -31,10 +28,10 @@ namespace CourseLibrary.API.Controllers
             return Ok(_mapper.Map<IEnumerable<AuthorDto>>(authors));
         }
 
-        [HttpGet("{id:guid}")]
-        public IActionResult GetAuthors(Guid id)
+        [HttpGet("{authorId:guid}")]
+        public IActionResult GetAuthors(Guid authorId)
         {
-            var author = _repo.GetAuthor(id);
+            var author = _repo.GetAuthor(authorId);
             if (author==null)
             {
                 return NotFound();
