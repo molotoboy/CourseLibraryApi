@@ -2,7 +2,7 @@
 
 namespace CourseLibrary.API.Models
 {
-    public class AuthorDto
+    public class AuthorGetDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
