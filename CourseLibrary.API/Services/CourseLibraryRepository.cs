@@ -1,5 +1,6 @@
 ﻿using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Entities;
+using CourseLibrary.API.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,26 +123,26 @@ namespace CourseLibrary.API.Services
             return _context.Authors.ToList<Author>();
         }
 
-        public IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery)
+        public IEnumerable<Author> GetAuthors(AuthorResourceParameters parameters)
         {
-            if (string.IsNullOrWhiteSpace(mainCategory)
-                && string.IsNullOrWhiteSpace(searchQuery))
+            if (string.IsNullOrWhiteSpace(parameters.MainCategory)
+                && string.IsNullOrWhiteSpace(parameters.SearchQuery))
             {
                 return GetAuthors();
             }
             var collection = _context.Authors as IQueryable<Author>;
-            if (!string.IsNullOrWhiteSpace(mainCategory))
+            if (!string.IsNullOrWhiteSpace(parameters.MainCategory))
             {
-                mainCategory = mainCategory.Trim();
-                collection = collection.Where(a => a.MainCategory == mainCategory);
+                parameters.MainCategory = parameters.MainCategory.Trim();
+                collection = collection.Where(a => a.MainCategory == parameters.MainCategory);
             }
-            if (!string.IsNullOrWhiteSpace(searchQuery))
+            if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
             {
-                searchQuery = searchQuery.Trim();
+                parameters.SearchQuery = parameters.SearchQuery.Trim();
                 collection = collection
-                    .Where(a => a.MainCategory.Contains(searchQuery)
-                        || a.FirstName.Contains(searchQuery)
-                        || a.LastName.Contains(searchQuery)
+                    .Where(a => a.MainCategory.Contains(parameters.SearchQuery)
+                        || a.FirstName.Contains(parameters.SearchQuery)
+                        || a.LastName.Contains(parameters.SearchQuery)
                     );
             }
             return collection;
