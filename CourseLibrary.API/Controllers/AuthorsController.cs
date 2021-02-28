@@ -21,6 +21,7 @@ namespace CourseLibrary.API.Controllers
         }
 
         [HttpGet()]
+        [HttpHead]
         public ActionResult<AuthorDto> GetAuthors()
         {
             var authors = _repo.GetAuthors();
@@ -29,6 +30,7 @@ namespace CourseLibrary.API.Controllers
         }
 
         [HttpGet("{authorId:guid}")]
+        [HttpHead("{authorId:guid}")]
         public IActionResult GetAuthors(Guid authorId)
         {
             var author = _repo.GetAuthor(authorId);
