@@ -22,9 +22,9 @@ namespace CourseLibrary.API.Controllers
 
         [HttpGet()]
         [HttpHead]
-        public ActionResult<AuthorDto> GetAuthors(string mainCategory)
+        public ActionResult<AuthorDto> GetAuthors(string mainCategory, string searchQuery)
         {
-            var authors = _repo.GetAuthors(mainCategory);
+            var authors = _repo.GetAuthors(mainCategory, searchQuery);
 
             return Ok(_mapper.Map<IEnumerable<AuthorDto>>(authors));
         }
