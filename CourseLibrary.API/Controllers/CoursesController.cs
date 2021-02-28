@@ -31,5 +31,20 @@ namespace CourseLibrary.API.Controllers
             var courses = _repo.GetCourses(authorId);
             return Ok(_mapper.Map<IEnumerable<CourseDto>>(courses));
         }
+
+        [HttpGet("{courseId}")]
+        public ActionResult<IEnumerable<CourseDto>> GetCoursesForAuthor(Guid authorId, Guid courseId)
+        {
+            if (!_repo.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+            var course = _repo.GetCourse(authorId, courseId);
+            if (course==null)
+            {
+                return NotFound();
+            }
+            return Ok(_mapper.Map<CourseDto>(course));
+        }
     }
 }
