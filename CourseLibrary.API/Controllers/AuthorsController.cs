@@ -50,7 +50,7 @@ namespace CourseLibrary.API.Controllers
             _repo.AddAuthor(authorEntity);
             _repo.Save();
             var authorToReturn = _mapper.Map<AuthorGetDto>(authorEntity);
-            return CreatedAtRoute("GetAuthor",
+            return CreatedAtAction(nameof(GetAuthors),
                 new { authorId = authorToReturn.Id },
                 authorToReturn);
         }
