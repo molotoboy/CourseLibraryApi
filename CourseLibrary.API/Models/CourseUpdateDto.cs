@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CourseLibrary.API.Models
 {
-    public class CourseUpdateDto
+    public class CourseUpdateDto : CourseManageDto
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
+        [Required(ErrorMessage = "You should fill out a description.")]
+        public override string Description { get=>base.Description; set=>base.Description = value; }
     }
 }
