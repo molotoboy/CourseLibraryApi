@@ -63,5 +63,24 @@ namespace CourseLibrary.API.Controllers
                 new { authorId = authorId, courseId = courseToReturn.Id },
                 courseToReturn);
         }
+        [HttpPut("{courseId}")]
+        public ActionResult UpdateCourseForAuthor(Guid authorId, 
+            Guid courseId, 
+            CourseUpdateDto course)
+        {
+            if (!_repo.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+            var courseFromRepo = _repo.GetCourse(authorId, courseId);
+            if (courseFromRepo==null)
+            {
+                return NotFound();
+            }
+            _mapper.Map(course, courseFromRepo);
+            _repo.UpdateCourse(courseFromRepo);
+            _repo.Save();
+            return NoContent(); // Ok();
+        }
     }
 }
