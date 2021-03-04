@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -63,6 +64,7 @@ namespace CourseLibrary.API.Controllers
                 new { authorId = authorId, courseId = courseToReturn.Id },
                 courseToReturn);
         }
+
         [HttpPut("{courseId}")]
         public IActionResult UpdateCourseForAuthor(Guid authorId,
             Guid courseId,
@@ -86,6 +88,32 @@ namespace CourseLibrary.API.Controllers
             _repo.UpdateCourse(courseFromRepo);
             _repo.Save();
             return Ok(); // NoContent(); // Ok();
+        }
+
+        [HttpPatch("{courseId}")]
+        public ActionResult PartiallyUpdateCourseForAuthor(Guid authorId, 
+            Guid courseId, 
+            JsonPatchDocument<CourseUpdateDto> patchDocument)
+        {
+            if (!_repo.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+            var courseFromRepo = _repo.GetCourse(authorId, courseId);
+            if (courseFromRepo==null)
+            {
+                return NotFound();
+            }
+            var courseToPatch = _mapper.Map<CourseUpdateDto>(courseFromRepo);
+            // todo: add validation
+            patchDocument.ApplyTo(courseToPatch);
+
+            _mapper.Map(courseToPatch, courseFromRepo);
+            _repo.UpdateCourse(courseFromRepo);
+            _repo.Save();
+
+            return NoContent();
+
         }
     }
 }
