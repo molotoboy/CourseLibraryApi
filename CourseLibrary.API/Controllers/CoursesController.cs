@@ -64,8 +64,8 @@ namespace CourseLibrary.API.Controllers
                 courseToReturn);
         }
         [HttpPut("{courseId}")]
-        public ActionResult UpdateCourseForAuthor(Guid authorId, 
-            Guid courseId, 
+        public IActionResult UpdateCourseForAuthor(Guid authorId,
+            Guid courseId,
             CourseUpdateDto course)
         {
             if (!_repo.AuthorExists(authorId))
@@ -73,14 +73,19 @@ namespace CourseLibrary.API.Controllers
                 return NotFound();
             }
             var courseFromRepo = _repo.GetCourse(authorId, courseId);
-            if (courseFromRepo==null)
+            if (courseFromRepo == null)
             {
-                return NotFound();
+                var courseToAdd = _mapper.Map<Entities.Course>(course);
+                courseToAdd.Id = courseId;
+                _repo.AddCourse(authorId, courseToAdd);
+                _repo.Save();
+                var courseToReturn = _mapper.Map<CourseGetDto>(courseToAdd);
+                return CreatedAtAction(nameof(GetCoursesForAuthor), new { authorId, courseId = courseToReturn.Id }, courseToReturn);
             }
             _mapper.Map(course, courseFromRepo);
             _repo.UpdateCourse(courseFromRepo);
             _repo.Save();
-            return NoContent(); // Ok();
+            return Ok(); // NoContent(); // Ok();
         }
     }
 }
